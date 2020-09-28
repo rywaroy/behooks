@@ -8,6 +8,15 @@ module.exports = {
         ecmaFeatures: { jsx: true },
     },
     plugins: ['react', '@typescript-eslint'],
-    rules: {},
+    rules: {
+        'consistent-return': 0,
+        'import/prefer-default-export': 0,
+        'import/extensions': 0,
+        'import/no-unresolved': 0,
+        'no-underscore-dangle': 0,
+        'max-len': 0,
+        'no-use-before-define': 0,
+        'no-unused-vars': 1,
+    },
     parser: '@typescript-eslint/parser',
 };
