@@ -35,7 +35,7 @@ function useModal(service?: (params: any) => Promise<any>, options: IOptions = {
     } else {
       toggle();
     }
-  }, [toggle, form, service]);
+  }, [toggle, form, service, defaultParams]);
 
   return {
     toggle,
