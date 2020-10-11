@@ -6,7 +6,7 @@ interface IOptions {
     defaultParams?: any;
 }
 
-function useModal(service: (params: any) => Promise<any>, options: IOptions = {}) {
+function useModal(service?: (params: any) => Promise<any>, options: IOptions = {}) {
   const [visible, setVisible] = useState<boolean>(false);
   const [key, setKey] = useState<number>(1);
 
