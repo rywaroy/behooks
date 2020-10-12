@@ -3,11 +3,25 @@ import useUpdateEffect from '../useUpdateEffect';
 import { UseAntdTableFormUtils } from '../useAntdTable';
 
 interface IOptions {
+  /** form对象 */
   form?: UseAntdTableFormUtils | false;
+
+  /** 默认参数 */
   defaultParams?: any;
+
+  /** 默认form参数 */
+  defaultFormData?: any;
+
+  /** form参数格式化 */
   formatParams?: (values: any) => any;
+
+  /** 弹窗确认回调 */
   submitCallback?: (values: any) => void;
+
+  /** 弹窗打开回调 */
   openCallback?: () => void;
+
+  /** 弹窗关闭回调 */
   closeCallback?: () => void;
 }
 
@@ -19,6 +33,7 @@ function useModal(service?: (params: any) => Promise<any>, options: IOptions = {
     form,
     defaultParams = {},
     formatParams,
+    defaultFormData,
     submitCallback,
     openCallback,
     closeCallback,
@@ -69,6 +84,12 @@ function useModal(service?: (params: any) => Promise<any>, options: IOptions = {
   useUpdateEffect(() => {
     setVisible(true);
   }, [key]);
+
+  useUpdateEffect(() => {
+    if (visible && form && defaultFormData) {
+      form.setFieldsValue(defaultFormData);
+    }
+  }, [visible]);
 
   return {
     toggle,
