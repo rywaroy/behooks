@@ -29,6 +29,11 @@ function useModal(service?: (params: any) => Promise<any>, options: IOptions = {
   const [visible, setVisible] = useState<boolean>(false);
   const [key, setKey] = useState<number>(1);
 
+  if (typeof service === 'object' && service !== null) {
+    options = service || {};
+    service = null;
+  }
+
   const {
     form,
     defaultParams = {},
