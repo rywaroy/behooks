@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import useUpdateEffect from '../useUpdateEffect';
 import { UseAntdTableFormUtils } from '../useAntdTable';
 
 interface IOptions {
@@ -13,13 +14,18 @@ function useModal(service?: (params: any) => Promise<any>, options: IOptions = {
   const { form, defaultParams = {} } = options;
 
   const toggle = useCallback(() => {
-    setVisible(!visible);
+    // 关闭
     if (visible) {
-      setTimeout(() => {
-        setKey(Math.random());
-      }, 500);
+      setVisible(false);
+    } else {
+      // 打开
+      setKey(Math.random());
     }
   }, [visible, key]);
+
+  useUpdateEffect(() => {
+    setVisible(true);
+  }, [key]);
 
   const submit = useCallback(() => {
     if (service) {
