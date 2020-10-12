@@ -39,6 +39,9 @@ function useModal(service?: (params: any) => Promise<any>, options: IOptions = {
     closeCallback,
   } = options;
 
+  /**
+   * 弹窗打开/关闭
+   */
   const toggle = useCallback(() => {
     if (visible) {
       // 关闭
@@ -51,6 +54,9 @@ function useModal(service?: (params: any) => Promise<any>, options: IOptions = {
     }
   }, [visible, key]);
 
+  /**
+   * 弹窗提交
+   */
   const submit = useCallback(() => {
     let params = { ...defaultParams };
     if (form) {
@@ -65,6 +71,9 @@ function useModal(service?: (params: any) => Promise<any>, options: IOptions = {
     }
   }, [toggle, form, service, defaultParams]);
 
+  /**
+   * 提交方法
+   */
   const handleSubmit = useCallback((params) => {
     if (formatParams) {
       params = formatParams(params);
@@ -81,10 +90,16 @@ function useModal(service?: (params: any) => Promise<any>, options: IOptions = {
     }
   }, [formatParams, service, submitCallback, toggle]);
 
+  /**
+   * 监听key变化，打开弹窗
+   */
   useUpdateEffect(() => {
     setVisible(true);
   }, [key]);
 
+  /**
+   * 打开弹窗设置默认表单数据
+   */
   useUpdateEffect(() => {
     if (visible && form && defaultFormData) {
       form.setFieldsValue(defaultFormData);
