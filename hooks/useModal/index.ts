@@ -1,6 +1,10 @@
 import { useState, useCallback } from 'react';
 import useUpdateEffect from '../useUpdateEffect';
-import { UseAntdTableFormUtils } from '../useAntdTable';
+
+interface UseAntdTableFormUtils {
+  validateFields: (callback: (errors: any, values: any) => void) => void;
+  [key: string]: any;
+}
 
 interface IOptions {
   /** form对象 */
@@ -25,12 +29,13 @@ interface IOptions {
   closeCallback?: () => void;
 }
 
-function useModal(service?: (params: any) => Promise<any>, options: IOptions = {}) {
+function useModal(service: (params: any) => Promise<any> | null, options: IOptions = {}) {
   const [visible, setVisible] = useState<boolean>(false);
   const [key, setKey] = useState<number>(1);
 
   if (typeof service === 'object' && service !== null) {
     options = service || {};
+    // @ts-ignore
     service = null;
   }
 
@@ -65,7 +70,7 @@ function useModal(service?: (params: any) => Promise<any>, options: IOptions = {
   const submit = useCallback(() => {
     let params = { ...defaultParams };
     if (form) {
-      form.validateFields(null, (err, values) => {
+      form.validateFields((err, values) => {
         if (!err) {
           params = { ...params, ...values };
           handleSubmit(params);
@@ -84,6 +89,7 @@ function useModal(service?: (params: any) => Promise<any>, options: IOptions = {
       params = formatParams(params);
     }
     if (service) {
+      // @ts-ignore
       service(params)
         .then((res) => {
           submitCallback && submitCallback(res);
