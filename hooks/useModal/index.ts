@@ -16,7 +16,7 @@ interface IOptions {
 
 function useModal(options: IOptions = {}) {
   const [visible, setVisible] = useState<boolean>(false);
-  const [key, setKey] = useState<number>(1);
+  const [key, setKey] = useState<number>(Math.random());
 
   const {
     form,
