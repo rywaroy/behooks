@@ -5,26 +5,43 @@ interface IConfig {
   state: any;
 }
 
+type SetStateFunction = React.Dispatch<React.SetStateAction<number>>;
+
+interface IQueue {
+  [namespace: string]: Set<SetStateFunction>;
+}
+
 const stores: any = {};
 
-const queue: any = {};
+const queue: IQueue = {};
 
-const subScribe = (name: string, cb: Function) => {
-  if (!queue[name]) queue[name] = [];
-  queue[name].push(cb);
+/**
+ * 订阅 收集需要更新的组件的setState方法
+ */
+const subscribe = (name: string, cb: SetStateFunction) => {
+  if (!queue[name]) queue[name] = new Set<SetStateFunction>();
+  queue[name].add(cb);
 };
 
-const unSubScribe = (name: string, cb: Function) => {
+/**
+ * 取消订阅
+ */
+const unSubscribe = (name: string, cb: SetStateFunction) => {
   if (!queue[name]) return;
-  const index = queue[name].indexOf(cb);
-  if (index !== -1) queue[name].splice(index, 1);
+  queue[name].delete(cb);
 };
 
-const broadcast = (name: string, state: any) => {
+/**
+ * 广播 执行收集的setState方法，触发组件更新
+ */
+const broadcast = (name: string, state: number) => {
   if (!queue[name]) return;
-  queue[name].forEach((fn: Function) => fn(state));
+  queue[name].forEach((fn) => fn(state));
 };
 
+/**
+ * 创建Store
+ */
 export function createStore(config: IConfig) {
   const { namespace, state } = config;
 
@@ -41,6 +58,9 @@ export function createStore(config: IConfig) {
   return state;
 }
 
+/**
+ * 创建Store 返回store数据
+ */
 export function useStore(config: string | IConfig) {
   let namespace: string;
   if (typeof config === 'object') {
@@ -57,8 +77,8 @@ export function useStore(config: string | IConfig) {
   const [, setState] = useState<number>();
 
   useEffect(() => {
-    subScribe(namespace, setState);
-    return () => unSubScribe(namespace, setState);
+    subscribe(namespace, setState);
+    return () => unSubscribe(namespace, setState);
   }, []);
 
   function setStore(object: any) {
