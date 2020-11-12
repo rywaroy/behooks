@@ -13,6 +13,8 @@ interface IQueue {
 
 const stores: any = {};
 
+const defaultStores: any = {};
+
 const queue: IQueue = {};
 
 /**
@@ -54,6 +56,7 @@ export function createStore(config: IConfig) {
   }
 
   stores[namespace] = state;
+  defaultStores[namespace] = { ...state };
 
   return state;
 }
@@ -70,9 +73,7 @@ export function useStore(config: string | IConfig) {
     namespace = config;
   }
 
-  if (!namespace || !stores[namespace]) {
-    return [];
-  }
+  if (!namespace || !stores[namespace]) return [];
 
   const [, setState] = useState<number>();
 
@@ -90,4 +91,14 @@ export function useStore(config: string | IConfig) {
     stores[namespace],
     setStore,
   ];
+}
+
+/**
+ * 清空store
+ */
+export function clearStore(namespace: string) {
+  if (!namespace || !stores[namespace]) return;
+
+  stores[namespace] = { ...defaultStores[namespace] };
+  broadcast(namespace, Math.random());
 }
