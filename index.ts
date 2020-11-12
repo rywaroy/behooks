@@ -4,4 +4,4 @@ export { default as useTable } from './hooks/useAntdTable/useTable';
 export { default as useAntdTable } from './hooks/useAntdTable';
 export { default as useModal } from './hooks/useModal';
 export { default as useTableHeight } from './hooks/useTableHeight';
-export { useStore, createStore } from './hooks/useStore';
+export { useStore, createStore, clearStore } from './hooks/useStore';
