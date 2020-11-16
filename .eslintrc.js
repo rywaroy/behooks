@@ -19,6 +19,7 @@ module.exports = {
         'no-unused-vars': 1,
         'no-unused-expressions': 0,
         'no-param-reassign': 0,
+        'no-plusplus': 0,
     },
     parser: '@typescript-eslint/parser',
 };
