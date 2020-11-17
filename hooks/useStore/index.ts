@@ -1,45 +1,15 @@
 import { useEffect, useState } from 'react';
+import { subscribe, unSubscribe, notify } from '../../utils/subscribe';
+import cloneDeep from '../../utils/cloneDeep';
 
 interface IConfig {
   namespace: string;
   state: any;
 }
 
-type SetStateFunction = React.Dispatch<React.SetStateAction<number>>;
-
-interface IQueue {
-  [namespace: string]: Set<SetStateFunction>;
-}
-
 const stores: any = {};
 
 const defaultStores: any = {};
-
-const queue: IQueue = {};
-
-/**
- * 订阅 收集需要更新的组件的setState方法
- */
-const subscribe = (name: string, cb: SetStateFunction) => {
-  if (!queue[name]) queue[name] = new Set<SetStateFunction>();
-  queue[name].add(cb);
-};
-
-/**
- * 取消订阅
- */
-const unSubscribe = (name: string, cb: SetStateFunction) => {
-  if (!queue[name]) return;
-  queue[name].delete(cb);
-};
-
-/**
- * 广播 执行收集的setState方法，触发组件更新
- */
-const broadcast = (name: string, state: number) => {
-  if (!queue[name]) return;
-  queue[name].forEach((fn) => fn(state));
-};
 
 /**
  * 创建Store
@@ -56,7 +26,7 @@ export function createStore(config: IConfig) {
   }
 
   stores[namespace] = state;
-  defaultStores[namespace] = { ...state };
+  defaultStores[namespace] = cloneDeep(state);
 
   return state;
 }
@@ -75,7 +45,7 @@ export function useStore(config: string | IConfig) {
 
   if (!namespace || !stores[namespace]) return [];
 
-  const [, setState] = useState<number>();
+  const [state, setState] = useState<any>(stores[namespace]);
 
   useEffect(() => {
     subscribe(namespace, setState);
@@ -83,12 +53,12 @@ export function useStore(config: string | IConfig) {
   }, []);
 
   function setStore(object: any) {
-    stores[namespace] = { ...stores[namespace], ...object };
-    broadcast(namespace, Math.random());
+    stores[namespace] = { ...state, ...object };
+    notify(namespace, stores[namespace]);
   }
 
   return [
-    stores[namespace],
+    state,
     setStore,
   ];
 }
@@ -100,5 +70,5 @@ export function clearStore(namespace: string) {
   if (!namespace || !stores[namespace]) return;
 
   stores[namespace] = { ...defaultStores[namespace] };
-  broadcast(namespace, Math.random());
+  notify(namespace, stores[namespace]);
 }
