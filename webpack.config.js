@@ -76,6 +76,9 @@ module.exports = {
     }),
   ],
   entry: {
-    index: ['./src/index.ts'],
+    index: ['./src/index.tsx'],
+  },
+  resolve: {
+    extensions: ['.js', '.json', '.ts', 'tsx'],
   },
 };

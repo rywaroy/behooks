@@ -54,7 +54,9 @@
     },
     "dependencies": {
         "@ahooksjs/use-request": "^2.6.0",
+        "antd": "^4.8.5",
         "lodash": "^4.17.20",
+        "mockjs": "^1.1.0",
         "react": "^16.13.1",
         "react-dom": "^16.13.1"
     },
