@@ -20,6 +20,7 @@ module.exports = {
         'no-unused-expressions': 0,
         'no-param-reassign': 0,
         'no-plusplus': 0,
+        'no-shadow': 0,
     },
     parser: '@typescript-eslint/parser',
 };
