@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from 'react';
+import cloneDeep from 'lodash/cloneDeep';
 import { subscribe, unSubscribe, notify } from '../../utils/subscribe';
-import cloneDeep from '../../utils/cloneDeep';
 
 interface IConfig {
   namespace: string;
