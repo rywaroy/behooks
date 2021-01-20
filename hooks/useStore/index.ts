@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import { subscribe, unSubscribe, notify } from '../../utils/subscribe';
 import cloneDeep from '../../utils/cloneDeep';
 
@@ -45,7 +45,7 @@ export function useStore(config: string | IConfig) {
 
   if (!namespace || !stores[namespace]) return [];
 
-  const [state, setState] = useState<any>(stores[namespace]);
+  const [state, setState] = useReducer((state: any, action: any) => ({ ...state, ...action }), stores[namespace]);
 
   useEffect(() => {
     subscribe(namespace, setState);
@@ -53,7 +53,7 @@ export function useStore(config: string | IConfig) {
   }, []);
 
   function setStore(object: any) {
-    stores[namespace] = { ...state, ...object };
+    stores[namespace] = { ...stores[namespace], ...object };
     notify(namespace, stores[namespace]);
   }
 
