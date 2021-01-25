@@ -1,6 +1,6 @@
 {
     "name": "behooks",
-    "version": "0.8.2",
+    "version": "0.8.3",
     "scripts": {
         "build": "rollup -c",
         "dev": "webpack-dev-server",
