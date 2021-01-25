@@ -25,8 +25,13 @@ export function createStore(config: IConfig) {
     return stores[namespace];
   }
 
-  stores[namespace] = state;
-  defaultStores[namespace] = cloneDeep(state);
+  if (typeof state === 'function') {
+    stores[namespace] = state();
+    defaultStores[namespace] = state;
+  } else {
+    stores[namespace] = state;
+    defaultStores[namespace] = cloneDeep(state);
+  }
 
   return state;
 }
@@ -68,7 +73,11 @@ export function useStore(config: string | IConfig) {
  */
 export function clearStore(namespace: string) {
   if (!namespace || !stores[namespace]) return;
-
-  stores[namespace] = { ...defaultStores[namespace] };
+  const state = defaultStores[namespace];
+  if (typeof state === 'function') {
+    stores[namespace] = state();
+  } else {
+    stores[namespace] = cloneDeep(defaultStores[namespace]);
+  }
   notify(namespace, stores[namespace]);
 }
